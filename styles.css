@@ -168,6 +168,43 @@ h3 {
   display: none;
 }
 
+.player-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.player-strip .eyebrow {
+  margin-bottom: 0.2rem;
+  color: var(--berry);
+}
+
+.player-strip strong {
+  color: var(--moss-dark);
+  font-size: 1.45rem;
+}
+
+.player-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: flex-end;
+}
+
+.player-tab {
+  color: var(--moss-dark);
+  background: rgba(255, 250, 240, 0.86);
+  border-color: var(--line);
+}
+
+.player-tab.active {
+  color: #fffdf5;
+  background: var(--berry);
+  border-color: var(--berry);
+}
+
 .panel {
   padding: clamp(1rem, 2vw, 1.45rem);
   background:
@@ -685,6 +722,15 @@ input[type="checkbox"] {
   .actions {
     justify-content: flex-start;
     margin-top: 1.2rem;
+  }
+
+  .player-strip {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .player-tabs {
+    justify-content: flex-start;
   }
 
   .hero,

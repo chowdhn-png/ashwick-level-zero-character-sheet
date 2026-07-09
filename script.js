@@ -246,11 +246,22 @@ const pointBuyCosts = {
   15: 9
 };
 
-const storageKey = "ashwick-level-zero-sheet";
+const players = [
+  { id: "nabeel", name: "Nabeel" },
+  { id: "nan", name: "Nan" },
+  { id: "ken", name: "Ken" },
+  { id: "jing", name: "Jing" },
+  { id: "player-5", name: "Player 5" }
+];
+
+const legacyStorageKey = "ashwick-level-zero-sheet";
 const mapStorageKey = "ashwick-map-state";
+let activePlayerId = players[0].id;
 const statGrid = document.querySelector("#statGrid");
 const skillList = document.querySelector("#skillList");
 const checklistProgress = document.querySelector("#checklistProgress");
+const playerTabs = document.querySelector("#playerTabs");
+const activePlayerName = document.querySelector("#activePlayerName");
 const speciesSelect = document.querySelector("#species");
 const sourceBookSelect = document.querySelector("#sourceBook");
 const occupationSelect = document.querySelector("#occupation");
@@ -274,6 +285,10 @@ let mapState = {
   tokens: []
 };
 let draggedToken = null;
+
+function playerStorageKey(playerId = activePlayerId) {
+  return `ashwick-level-zero-sheet-${playerId}`;
+}
 
 function modifier(score) {
   return Math.floor((score - 10) / 2);
@@ -349,6 +364,38 @@ function renderOccupationOptions() {
     option.textContent = occupation.name;
     occupationSelect.append(option);
   });
+}
+
+function renderPlayerTabs() {
+  players.forEach((player) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "player-tab";
+    button.dataset.playerId = player.id;
+    button.textContent = player.name;
+    button.addEventListener("click", () => switchPlayer(player.id));
+    playerTabs.append(button);
+  });
+  updatePlayerTabs();
+}
+
+function updatePlayerTabs() {
+  const currentPlayer = players.find((player) => player.id === activePlayerId) || players[0];
+  activePlayerName.textContent = currentPlayer.name;
+  document.querySelectorAll(".player-tab").forEach((button) => {
+    button.classList.toggle("active", button.dataset.playerId === activePlayerId);
+  });
+}
+
+function switchPlayer(playerId) {
+  if (playerId === activePlayerId) return;
+  saveSheet();
+  activePlayerId = playerId;
+  resetSheetFields();
+  loadSheet();
+  updateSpeciesDetails();
+  updateOccupationDetails();
+  updatePlayerTabs();
 }
 
 function detailRow(label, value) {
@@ -489,6 +536,20 @@ function allSaveFields() {
   return Array.from(document.querySelectorAll("[data-save]"));
 }
 
+function resetSheetFields() {
+  allSaveFields().forEach((field) => {
+    if (field.type === "checkbox" || field.type === "radio") {
+      field.checked = false;
+    } else if (field.dataset.statInput) {
+      field.value = 10;
+    } else {
+      field.value = "";
+    }
+  });
+  updateStats();
+  updateChecklistProgress();
+}
+
 function saveSheet() {
   const data = {};
   allSaveFields().forEach((field, index) => {
@@ -498,7 +559,7 @@ function saveSheet() {
     }
     data[fieldKey(field, index)] = field.type === "checkbox" ? field.checked : field.value;
   });
-  localStorage.setItem(storageKey, JSON.stringify(data));
+  localStorage.setItem(playerStorageKey(), JSON.stringify(data));
   updateChecklistProgress();
 }
 
@@ -507,9 +568,10 @@ function saveMapState() {
 }
 
 function loadSheet() {
-  const raw = localStorage.getItem(storageKey);
+  const raw = localStorage.getItem(playerStorageKey()) || (activePlayerId === players[0].id ? localStorage.getItem(legacyStorageKey) : null);
   if (!raw) {
     updateStats();
+    updateChecklistProgress();
     return;
   }
 
@@ -527,7 +589,7 @@ function loadSheet() {
       }
     });
   } catch {
-    localStorage.removeItem(storageKey);
+    localStorage.removeItem(playerStorageKey());
   }
 
   updateStats();
@@ -536,10 +598,11 @@ function loadSheet() {
 
 function exportJson() {
   saveSheet();
-  const blob = new Blob([localStorage.getItem(storageKey) || "{}"], { type: "application/json" });
+  const blob = new Blob([localStorage.getItem(playerStorageKey()) || "{}"], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  const name = document.querySelector("#characterName").value.trim() || "ashwick-character";
+  const player = players.find((item) => item.id === activePlayerId);
+  const name = document.querySelector("#characterName").value.trim() || `${player?.name || "player"}-ashwick-character`;
   link.href = url;
   link.download = `${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.json`;
   link.click();
@@ -547,21 +610,12 @@ function exportJson() {
 }
 
 function clearSheet() {
-  if (!confirm("Clear this character sheet?")) return;
-  localStorage.removeItem(storageKey);
-  allSaveFields().forEach((field) => {
-    if (field.type === "checkbox") {
-      field.checked = false;
-    } else if (field.type === "radio") {
-      field.checked = false;
-    } else if (field.dataset.statInput) {
-      field.value = 10;
-    } else {
-      field.value = "";
-    }
-  });
-  updateStats();
-  updateChecklistProgress();
+  const player = players.find((item) => item.id === activePlayerId);
+  if (!confirm(`Clear ${player?.name || "this player"}'s character sheet?`)) return;
+  localStorage.removeItem(playerStorageKey());
+  resetSheetFields();
+  updateSpeciesDetails();
+  updateOccupationDetails();
 }
 
 function loadMapState() {
@@ -737,13 +791,17 @@ renderStats();
 renderSkills();
 renderSpeciesOptions();
 renderOccupationOptions();
+renderPlayerTabs();
 loadSheet();
 updateSpeciesDetails();
 updateOccupationDetails();
 loadMapState();
 
 tabButtons.forEach((button) => {
-  button.addEventListener("click", () => switchTab(button.dataset.tabTarget));
+  button.addEventListener("click", () => {
+    saveSheet();
+    switchTab(button.dataset.tabTarget);
+  });
 });
 
 document.querySelectorAll("[data-save]").forEach((field) => {
