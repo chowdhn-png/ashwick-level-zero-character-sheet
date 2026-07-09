@@ -27,6 +27,8 @@
       <nav class="tabs" aria-label="Ashwick tools">
         <button class="tab-button active" type="button" data-tab-target="sheetPanel">Character Sheet</button>
         <button class="tab-button" type="button" data-tab-target="mapPanel">Ashwick Map</button>
+        <button class="tab-button" type="button" data-tab-target="npcsPanel">NPCs</button>
+        <button class="tab-button" type="button" data-tab-target="filesPanel">Additional Files</button>
       </nav>
 
       <section class="tab-panel active" id="sheetPanel">
@@ -45,6 +47,17 @@
             <span>Character name</span>
             <input id="characterName" data-save type="text" placeholder="Name your Ashwick youth">
           </label>
+        </div>
+        <div class="character-portrait-card">
+          <div class="character-portrait-preview" id="characterPortraitPreview">
+            <span>No portrait</span>
+          </div>
+          <label>
+            <span>Character portrait</span>
+            <input id="characterPortraitInput" type="file" accept="image/*">
+            <input id="characterPortrait" data-save type="hidden">
+          </label>
+          <button id="clearCharacterPortrait" type="button" class="ghost">Clear Portrait</button>
         </div>
         <div class="hero-stats">
           <div>
@@ -331,6 +344,12 @@
               <span>Drag/drop or choose a character thumbnail</span>
             </label>
             <label>
+              <span>Saved character portrait</span>
+              <select id="savedPortraitSelect">
+                <option value="">Use uploaded thumbnail</option>
+              </select>
+            </label>
+            <label>
               <span>Token label</span>
               <input id="mapTokenName" type="text" placeholder="Character or party name">
             </label>
@@ -347,6 +366,76 @@
           </div>
 
           <div class="token-list" id="tokenList" aria-live="polite"></div>
+
+          <section class="map-reference">
+            <div class="section-head">
+              <div>
+                <h2>Village Detail Map</h2>
+                <p>A closer look at Ashwick's shops, services, shrine, stables, river crossing, and village green.</p>
+              </div>
+            </div>
+            <div class="reference-image-frame">
+              <img src="assets/ashwick-village-map.png" alt="Detailed village map of Ashwick and its shops and services">
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="npcsPanel" hidden>
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2>People of Ashwick</h2>
+              <p>Ashwick is small enough that most people know each other by name, reputation, or family connection. You do not know everyone's secrets, but you know the faces that matter in daily village life.</p>
+            </div>
+          </div>
+          <h3 class="subhead">Village Adults</h3>
+          <div class="npc-grid">
+            <article class="npc-card">
+              <img class="npc-portrait" src="assets/npc-mira-anlow.png" alt="Portrait of Mira Anlow">
+              <h3>Mira Anlow</h3>
+              <p>Mira is Ashwick's herbalist and practical healer. She treats fevers, wounds, coughs, bad sleep, difficult births, and the ordinary pains of village life.</p>
+              <p>She is respected, but private. People trust her hands more than her answers.</p>
+            </article>
+            <article class="npc-card">
+              <img class="npc-portrait" src="assets/npc-sister-cael.png" alt="Portrait of Sister Cael">
+              <h3>Sister Cael</h3>
+              <p>Sister Cael keeps the village shrine. She leads prayers, tends the shrine lamps, records births and deaths, and reminds people of duties they would rather forget.</p>
+              <p>She is stern, disciplined, and not known for wasting words.</p>
+            </article>
+            <article class="npc-card">
+              <img class="npc-portrait" src="assets/npc-old-thom-bracken.png" alt="Portrait of Old Thom Bracken">
+              <h3>Old Thom Bracken</h3>
+              <p>Old Thom is an elderly villager who keeps mostly to himself. He repairs small things, mutters about poor workmanship, and notices more than he admits.</p>
+              <p>Most children know him as gruff, hard to impress, and difficult to fool.</p>
+            </article>
+            <article class="npc-card">
+              <img class="npc-portrait" src="assets/npc-brenna-hollis.png" alt="Portrait of Brenna Hollis">
+              <h3>Brenna Hollis</h3>
+              <p>Brenna is Ashwick's blacksmith, responsible for repairing tools, shoeing animals, sharpening blades, and keeping basic militia gear usable.</p>
+              <p>She is practical, blunt, and one of the adults most likely to know who has been preparing for trouble.</p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="filesPanel" hidden>
+        <section class="panel">
+          <div class="section-head">
+            <div>
+              <h2>Additional Files</h2>
+              <p>Reference handouts for shopping, services, and campaign prep.</p>
+            </div>
+          </div>
+          <div class="file-grid">
+            <article class="file-card">
+              <h3>Ashwick Starting Goods & Services</h3>
+              <a href="assets/ashwick-starting-goods.png" target="_blank" rel="noopener">Open full size</a>
+              <div class="reference-image-frame">
+                <img src="assets/ashwick-starting-goods.png" alt="Ashwick starting goods and services price list">
+              </div>
+            </article>
+          </div>
         </section>
       </section>
     </main>

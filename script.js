@@ -14,22 +14,214 @@ const skills = [
 ];
 
 const speciesOptions = [
-  { name: "Dragonborn", source: "2014 Player's Handbook", note: "Core 2014 species. Breath weapon is an obvious supernatural trait, so confirm whether Ashwick treats it as active or dormant." },
-  { name: "Dwarf", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic; note subrace and tool/language choices from your source." },
-  { name: "Elf", source: "2014 Player's Handbook", note: "Core 2014 species. Confirm any overtly magical ancestry traits or cantrip access with the DM." },
-  { name: "Gnome", source: "2014 Player's Handbook", note: "Core 2014 species. Confirm any supernatural or innate magical traits before play." },
-  { name: "Half-Elf", source: "2014 Player's Handbook", note: "Core 2014 species. Good fit for relationship/reputation play; confirm any variant traits with the DM." },
-  { name: "Half-Orc", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic." },
-  { name: "Halfling", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic; note subrace from your source." },
-  { name: "Human", source: "2014 Player's Handbook", note: "Core 2014 species. Standard or variant human should be confirmed with the DM." },
-  { name: "Tiefling", source: "2014 Player's Handbook", note: "Core 2014 species. Innate spellcasting and infernal traits are socially dangerous in Ashwick; confirm what begins dormant." },
-  { name: "Custom Lineage", source: "Tasha's Cauldron of Everything", note: "Tasha option. Use only with DM approval, and define how the lineage fits Ashwick's refugee village tone." },
-  { name: "No added species options", source: "Xanathar's Guide to Everything", note: "Xanathar's is allowed for other character material, but it does not add a major player species list." },
-  { name: "Changeling", source: "Eberron content", note: "Eberron species. Shapeshifting is overtly supernatural and socially risky; confirm whether it begins active, limited, or dormant." },
-  { name: "Kalashtar", source: "Eberron content", note: "Eberron species. Psychic/spiritual traits may be subtle but supernatural; confirm how they appear in Ashwick." },
-  { name: "Shifter", source: "Eberron content", note: "Eberron species. Shifting is an obvious transformation; confirm how visible, reliable, and feared it is." },
-  { name: "Warforged", source: "Eberron content", note: "Eberron species. Needs strong DM/world fit in a village-centered low-magic campaign." },
-  { name: "Dragonmarked ancestry or variant", source: "Eberron content", note: "Eberron option. Dragonmarks are magical and should almost certainly begin dormant or story-locked unless the DM says otherwise." }
+  {
+    name: "Dragonborn",
+    source: "2014 Player's Handbook",
+    scores: "Str +2, Cha +1",
+    proficiencies: "No default skill/tool proficiency from species.",
+    magic: "Breath weapon and draconic resistance should be DM-reviewed; breath weapon may begin dormant or unreliable.",
+    note: "Core 2014 species. Breath weapon is an obvious supernatural trait, so confirm whether Ashwick treats it as active or dormant."
+  },
+  {
+    name: "Hill Dwarf",
+    source: "2014 Player's Handbook",
+    scores: "Con +2, Wis +1",
+    proficiencies: "Dwarven combat/training and artisan tool choice, subject to DM approval for level 0.",
+    magic: "Usually non-spellcasting and easy to fit into low magic.",
+    note: "Sturdy village youth option. Confirm tool/language choices from your source."
+  },
+  {
+    name: "Mountain Dwarf",
+    source: "2014 Player's Handbook",
+    scores: "Con +2, Str +2",
+    proficiencies: "Dwarven combat/training, light/medium armor training, and artisan tool choice; DM may delay armor relevance at level 0.",
+    magic: "Usually non-spellcasting and easy to fit into low magic.",
+    note: "Strong fit for forge, quarry, militia, and craft occupations."
+  },
+  {
+    name: "High Elf",
+    source: "2014 Player's Handbook",
+    scores: "Dex +2, Int +1",
+    proficiencies: "Perception and elven weapon training; extra language. Cantrip should be dormant at level 0.",
+    magic: "The cantrip is active magic and should not be available at campaign start unless the DM explicitly unlocks it.",
+    note: "Confirm how any arcane inheritance appears in Ashwick."
+  },
+  {
+    name: "Wood Elf",
+    source: "2014 Player's Handbook",
+    scores: "Dex +2, Wis +1",
+    proficiencies: "Perception and elven weapon training.",
+    magic: "Usually no spellcasting, but supernatural elf traits should be kept subtle.",
+    note: "Good fit for hunter, shepherd, woodcutter, or quiet outsider stories."
+  },
+  {
+    name: "Drow",
+    source: "2014 Player's Handbook",
+    scores: "Dex +2, Cha +1",
+    proficiencies: "Perception and drow weapon training.",
+    magic: "Innate drow magic is active spellcasting; begin dormant/story-locked for Ashwick.",
+    note: "Requires a strong social/reputation conversation with the DM."
+  },
+  {
+    name: "Lightfoot Halfling",
+    source: "2014 Player's Handbook",
+    scores: "Dex +2, Cha +1",
+    proficiencies: "No default skill/tool proficiency from species.",
+    magic: "Usually non-spellcasting and easy to fit into low magic.",
+    note: "Good village-centered fit for inn, messenger, farm, or cellar-runner play."
+  },
+  {
+    name: "Stout Halfling",
+    source: "2014 Player's Handbook",
+    scores: "Dex +2, Con +1",
+    proficiencies: "No default skill/tool proficiency from species.",
+    magic: "Usually non-spellcasting and easy to fit into low magic.",
+    note: "A grounded option for rough chores, farm work, river work, or practical survival."
+  },
+  {
+    name: "Human",
+    source: "2014 Player's Handbook",
+    scores: "+1 to all ability scores",
+    proficiencies: "No default skill/tool proficiency from standard human.",
+    magic: "No species magic.",
+    note: "Core 2014 species. Variant human should be confirmed with the DM."
+  },
+  {
+    name: "Variant Human",
+    source: "2014 Player's Handbook",
+    scores: "+1 to two ability scores",
+    proficiencies: "One skill proficiency; feat only if DM allows it for level 0.",
+    magic: "No species magic, but magical feats should be unavailable/dormant.",
+    note: "Use only if the DM allows feats during level 0 character creation."
+  },
+  {
+    name: "Forest Gnome",
+    source: "2014 Player's Handbook",
+    scores: "Int +2, Dex +1",
+    proficiencies: "No default skill/tool proficiency from species.",
+    magic: "Minor illusion and animal communication are magical/supernatural; begin dormant or story-limited.",
+    note: "Confirm any supernatural gnome traits before play."
+  },
+  {
+    name: "Rock Gnome",
+    source: "2014 Player's Handbook",
+    scores: "Int +2, Con +1",
+    proficiencies: "Tinker's tools are a notable species tool proficiency.",
+    magic: "Usually no active spellcasting; tinkering is mundane unless flavored otherwise.",
+    note: "Good fit for scribe, carpenter, forge, or repair-focused youth."
+  },
+  {
+    name: "Half-Elf",
+    source: "2014 Player's Handbook",
+    scores: "Cha +2, +1 to two other ability scores",
+    proficiencies: "Two skill proficiencies from species.",
+    magic: "No default spellcasting, but ancestry may be socially complicated.",
+    note: "Good fit for relationship/reputation play."
+  },
+  {
+    name: "Half-Orc",
+    source: "2014 Player's Handbook",
+    scores: "Str +2, Con +1",
+    proficiencies: "Intimidation from species.",
+    magic: "Usually non-spellcasting and easy to fit into low magic.",
+    note: "Good fit for dangerous labor, militia, forge, quarry, or outsider reputation."
+  },
+  {
+    name: "Tiefling",
+    source: "2014 Player's Handbook",
+    scores: "Cha +2, Int +1",
+    proficiencies: "No default skill/tool proficiency from species.",
+    magic: "Innate spellcasting is active magic and should begin dormant/story-locked.",
+    note: "Infernal traits are socially dangerous in Ashwick; confirm what is visible."
+  },
+  {
+    name: "Custom Lineage",
+    source: "Tasha's Cauldron of Everything",
+    scores: "+2 to one ability score",
+    proficiencies: "Variable trait/feat choices require DM approval; avoid magic-feat benefits at level 0.",
+    magic: "Any magical ancestry or feat expression should begin dormant.",
+    note: "Use only with DM approval, and define how the lineage fits Ashwick's refugee village tone."
+  },
+  {
+    name: "Tasha Origin Reassignment",
+    source: "Tasha's Cauldron of Everything",
+    scores: "Optional rule: reassign species ability score increases with DM approval.",
+    proficiencies: "Optional rule: some proficiencies may be swapped with DM approval.",
+    magic: "This does not grant active magic; any magical trait still follows Ashwick dormancy rules.",
+    note: "Use as a rules option layered onto another species, not as a separate ancestry."
+  },
+  {
+    name: "No added species options",
+    source: "Xanathar's Guide to Everything",
+    scores: "No new major player species list.",
+    proficiencies: "Use Xanathar's for other allowed character material if the DM permits.",
+    magic: "No species magic added by this source entry.",
+    note: "Xanathar's is allowed for other character material, but it does not add a major player species list."
+  },
+  {
+    name: "Changeling",
+    source: "Eberron content",
+    scores: "Cha +2, +1 to one ability score",
+    proficiencies: "Social skill/tool details vary by source version; verify with your book and DM.",
+    magic: "Shapeshifting is overtly supernatural and should be limited, feared, dormant, or story-triggered.",
+    note: "Eberron species. Confirm whether shapeshifting begins active, limited, or dormant."
+  },
+  {
+    name: "Kalashtar",
+    source: "Eberron content",
+    scores: "Wis +2, Cha +1",
+    proficiencies: "No simple level-0 proficiency summary; verify traits with source and DM.",
+    magic: "Psychic/spiritual traits are supernatural; keep subtle and non-combat at start.",
+    note: "Eberron species. Confirm how unusual mind/soul traits appear in Ashwick."
+  },
+  {
+    name: "Beasthide Shifter",
+    source: "Eberron content",
+    scores: "Dex +1, Con +2",
+    proficiencies: "Check source version for skill details.",
+    magic: "Shifting is a visible supernatural transformation; begin limited or story-locked.",
+    note: "Eberron shifter option. Confirm how visible and feared shifting is."
+  },
+  {
+    name: "Longtooth Shifter",
+    source: "Eberron content",
+    scores: "Dex +1, Str +2",
+    proficiencies: "Check source version for skill details.",
+    magic: "Shifting is a visible supernatural transformation; begin limited or story-locked.",
+    note: "Eberron shifter option. Good for hunter, militia, or outsider arcs if approved."
+  },
+  {
+    name: "Swiftstride Shifter",
+    source: "Eberron content",
+    scores: "Dex +1, Cha +2",
+    proficiencies: "Check source version for skill details.",
+    magic: "Shifting is a visible supernatural transformation; begin limited or story-locked.",
+    note: "Eberron shifter option. Confirm how the village interprets shifting signs."
+  },
+  {
+    name: "Wildhunt Shifter",
+    source: "Eberron content",
+    scores: "Dex +1, Wis +2",
+    proficiencies: "Check source version for skill details.",
+    magic: "Shifting is a visible supernatural transformation; begin limited or story-locked.",
+    note: "Eberron shifter option. Good for tracker, shepherd, or woods-focused stories if approved."
+  },
+  {
+    name: "Warforged",
+    source: "Eberron content",
+    scores: "Con +2, +1 to one ability score",
+    proficiencies: "One skill and one tool proficiency are typical; verify with source and DM.",
+    magic: "Not spellcasting, but the origin is extraordinary and needs strong Ashwick world fit.",
+    note: "Eberron species. Needs explicit DM/world approval in a low-magic refugee village."
+  },
+  {
+    name: "Dragonmarked ancestry or variant",
+    source: "Eberron content",
+    scores: "Varies by mark and ancestry.",
+    proficiencies: "Varies by mark and ancestry.",
+    magic: "Dragonmark magic should begin dormant or story-locked unless the DM says otherwise.",
+    note: "Eberron option. Treat as socially dangerous and campaign-defining."
+  }
 ];
 
 const occupations = [
@@ -262,6 +454,10 @@ const skillList = document.querySelector("#skillList");
 const checklistProgress = document.querySelector("#checklistProgress");
 const playerTabs = document.querySelector("#playerTabs");
 const activePlayerName = document.querySelector("#activePlayerName");
+const characterPortraitInput = document.querySelector("#characterPortraitInput");
+const characterPortrait = document.querySelector("#characterPortrait");
+const characterPortraitPreview = document.querySelector("#characterPortraitPreview");
+const clearCharacterPortraitButton = document.querySelector("#clearCharacterPortrait");
 const speciesSelect = document.querySelector("#species");
 const sourceBookSelect = document.querySelector("#sourceBook");
 const occupationSelect = document.querySelector("#occupation");
@@ -272,6 +468,7 @@ const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
 const portraitInput = document.querySelector("#portraitInput");
 const portraitDrop = document.querySelector("#portraitDrop");
 const portraitPreview = document.querySelector("#portraitPreview");
+const savedPortraitSelect = document.querySelector("#savedPortraitSelect");
 const mapTokenName = document.querySelector("#mapTokenName");
 const mapStage = document.querySelector("#mapStage");
 const mapCanvas = document.querySelector("#mapCanvas");
@@ -395,6 +592,7 @@ function switchPlayer(playerId) {
   loadSheet();
   updateSpeciesDetails();
   updateOccupationDetails();
+  renderCharacterPortraitPreview();
   updatePlayerTabs();
 }
 
@@ -425,6 +623,9 @@ function updateSpeciesDetails() {
     <p>${selected.note}</p>
     <div class="detail-list">
       ${detailRow("Source", selected.source)}
+      ${detailRow("Ability scores", selected.scores)}
+      ${detailRow("Proficiencies", selected.proficiencies)}
+      ${detailRow("Magic at start", selected.magic)}
       ${detailRow("Ashwick note", "Check with the DM if this choice gives active magic, innate spellcasting, shapeshifting, or other obvious supernatural power.")}
     </div>
   `;
@@ -561,6 +762,7 @@ function saveSheet() {
   });
   localStorage.setItem(playerStorageKey(), JSON.stringify(data));
   updateChecklistProgress();
+  updateSavedPortraitOptions();
 }
 
 function saveMapState() {
@@ -616,6 +818,61 @@ function clearSheet() {
   resetSheetFields();
   updateSpeciesDetails();
   updateOccupationDetails();
+  renderCharacterPortraitPreview();
+  updateSavedPortraitOptions();
+}
+
+function currentCharacterPortraitData() {
+  return characterPortrait.value || "";
+}
+
+function renderCharacterPortraitPreview() {
+  const portrait = currentCharacterPortraitData();
+  if (portrait) {
+    characterPortraitPreview.innerHTML = `<img src="${portrait}" alt="Selected character portrait">`;
+    return;
+  }
+  characterPortraitPreview.innerHTML = "<span>No portrait</span>";
+}
+
+async function handleCharacterPortraitFile(file) {
+  if (!file || !file.type.startsWith("image/")) return;
+  characterPortrait.value = await resizeImage(file);
+  renderCharacterPortraitPreview();
+  saveSheet();
+}
+
+function savedPlayerPortraits() {
+  return players.map((player) => {
+    const raw = localStorage.getItem(playerStorageKey(player.id));
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw);
+      if (!data.characterPortrait) return null;
+      return {
+        id: player.id,
+        playerName: player.name,
+        characterName: data.characterName || player.name,
+        portrait: data.characterPortrait
+      };
+    } catch {
+      return null;
+    }
+  }).filter(Boolean);
+}
+
+function updateSavedPortraitOptions() {
+  const currentValue = savedPortraitSelect.value;
+  savedPortraitSelect.innerHTML = '<option value="">Use uploaded thumbnail</option>';
+  savedPlayerPortraits().forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.id;
+    option.textContent = `${item.playerName}: ${item.characterName}`;
+    savedPortraitSelect.append(option);
+  });
+  if ([...savedPortraitSelect.options].some((option) => option.value === currentValue)) {
+    savedPortraitSelect.value = currentValue;
+  }
 }
 
 function loadMapState() {
@@ -659,7 +916,13 @@ function tokenInitials(name) {
 }
 
 function tokenName() {
-  return mapTokenName.value.trim() || document.querySelector("#characterName").value.trim() || "Ashwick Youth";
+  const savedPortrait = savedPlayerPortraits().find((item) => item.id === savedPortraitSelect.value);
+  return mapTokenName.value.trim() || savedPortrait?.characterName || document.querySelector("#characterName").value.trim() || "Ashwick Youth";
+}
+
+function activeTokenImage() {
+  const savedPortrait = savedPlayerPortraits().find((item) => item.id === savedPortraitSelect.value);
+  return savedPortrait?.portrait || mapState.portrait;
 }
 
 function renderTokens() {
@@ -715,7 +978,7 @@ function addToken(event) {
     name,
     x: point.x,
     y: point.y,
-    image: mapState.portrait
+    image: activeTokenImage()
   });
   saveMapState();
   renderMapState();
@@ -795,7 +1058,9 @@ renderPlayerTabs();
 loadSheet();
 updateSpeciesDetails();
 updateOccupationDetails();
+renderCharacterPortraitPreview();
 loadMapState();
+updateSavedPortraitOptions();
 
 tabButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -848,6 +1113,19 @@ clearTokensButton.addEventListener("click", () => {
   mapState.tokens = [];
   saveMapState();
   renderMapState();
+});
+characterPortraitInput.addEventListener("change", () => handleCharacterPortraitFile(characterPortraitInput.files[0]));
+clearCharacterPortraitButton.addEventListener("click", () => {
+  characterPortrait.value = "";
+  characterPortraitInput.value = "";
+  renderCharacterPortraitPreview();
+  saveSheet();
+});
+savedPortraitSelect.addEventListener("change", () => {
+  const savedPortrait = savedPlayerPortraits().find((item) => item.id === savedPortraitSelect.value);
+  if (savedPortrait && !mapTokenName.value.trim()) {
+    mapTokenName.value = savedPortrait.characterName;
+  }
 });
 mapCanvas.addEventListener("click", addToken);
 mapStage.addEventListener("pointermove", moveToken);

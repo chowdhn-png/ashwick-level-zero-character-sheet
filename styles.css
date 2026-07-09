@@ -217,7 +217,7 @@ h3 {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 1.5rem;
   align-items: end;
   margin-bottom: 1rem;
@@ -259,6 +259,51 @@ label span {
 
 .character-name input::placeholder {
   color: rgba(255, 248, 234, 0.6);
+}
+
+.character-portrait-card {
+  display: grid;
+  gap: 0.6rem;
+  width: min(13rem, 100%);
+  color: #fff8ea;
+}
+
+.character-portrait-card label span {
+  color: #f6d88c;
+}
+
+.character-portrait-card input[type="file"] {
+  color: #fff8ea;
+  background: rgba(255, 248, 234, 0.08);
+  border-color: rgba(246, 216, 140, 0.55);
+}
+
+.character-portrait-preview,
+.npc-portrait {
+  overflow: hidden;
+  border: 3px solid #fff8ea;
+  box-shadow: 0 0 0 2px rgba(36, 57, 35, 0.75), 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.character-portrait-preview {
+  display: grid;
+  width: 6.5rem;
+  height: 6.5rem;
+  place-items: center;
+  color: rgba(255, 248, 234, 0.75);
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-align: center;
+  text-transform: uppercase;
+  border-radius: 50%;
+  background: rgba(36, 57, 35, 0.7);
+}
+
+.character-portrait-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .hero-stats {
@@ -706,6 +751,76 @@ input[type="checkbox"] {
   padding: 0.4rem 0.65rem;
 }
 
+.map-reference {
+  margin-top: 1.25rem;
+}
+
+.reference-image-frame {
+  overflow: auto;
+  max-height: min(78vh, 900px);
+  border: 2px solid var(--moss-dark);
+  border-radius: 8px;
+  background: #241b13;
+  box-shadow: inset 0 0 0 4px rgba(255, 248, 234, 0.18);
+}
+
+.reference-image-frame img {
+  display: block;
+  width: 100%;
+  min-width: 760px;
+  height: auto;
+}
+
+.subhead {
+  margin-bottom: 0.8rem;
+  color: var(--berry);
+}
+
+.npc-grid,
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.npc-card,
+.file-card {
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(245, 231, 203, 0.55);
+}
+
+.npc-portrait {
+  float: left;
+  width: 6.25rem;
+  height: 6.25rem;
+  margin: 0 0.9rem 0.55rem 0;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.npc-card h3,
+.file-card h3 {
+  color: var(--moss-dark);
+  font-size: 1.25rem;
+}
+
+.npc-card p:last-child,
+.file-card p:last-child {
+  margin-bottom: 0;
+}
+
+.file-card a {
+  display: inline-flex;
+  margin-bottom: 0.85rem;
+  color: var(--berry);
+  font-family: Arial, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 900px) {
   .hero,
   .section-head {
@@ -738,6 +853,10 @@ input[type="checkbox"] {
     grid-template-columns: 1fr;
   }
 
+  .character-portrait-card {
+    width: 100%;
+  }
+
   .hero-stats,
   .score-summary {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -754,6 +873,11 @@ input[type="checkbox"] {
   .portrait-preview {
     width: 4.8rem;
     height: 4.8rem;
+  }
+
+  .npc-grid,
+  .file-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -775,6 +899,10 @@ input[type="checkbox"] {
 
   .detail-list div {
     grid-template-columns: 1fr;
+  }
+
+  .reference-image-frame img {
+    min-width: 720px;
   }
 }
 
