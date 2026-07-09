@@ -8,19 +8,28 @@
   </head>
   <body>
     <header class="topbar">
-      <div>
-        <p class="eyebrow">Ashwick Village Ledger</p>
-        <h1>Level 0 Character Sheet</h1>
-        <p class="subtitle">Ordinary youths, dangerous woods, quiet secrets, and magic that has not learned your name yet.</p>
-      </div>
-      <div class="actions">
-        <button id="printSheet" type="button">Print</button>
-        <button id="exportJson" type="button">Export JSON</button>
-        <button id="clearSheet" type="button" class="ghost">Clear</button>
+      <div class="banner-art" aria-hidden="true"></div>
+      <div class="topbar-content">
+        <div>
+          <p class="eyebrow">Ashwick Village Ledger</p>
+          <h1>Level 0 Character Sheet</h1>
+          <p class="subtitle">Ordinary youths, dangerous woods, quiet secrets, and magic that has not learned your name yet.</p>
+        </div>
+        <div class="actions">
+          <button id="printSheet" type="button">Print</button>
+          <button id="exportJson" type="button">Export JSON</button>
+          <button id="clearSheet" type="button" class="ghost">Clear</button>
+        </div>
       </div>
     </header>
 
     <main class="shell">
+      <nav class="tabs" aria-label="Ashwick tools">
+        <button class="tab-button active" type="button" data-tab-target="sheetPanel">Character Sheet</button>
+        <button class="tab-button" type="button" data-tab-target="mapPanel">Ashwick Map</button>
+      </nav>
+
+      <section class="tab-panel active" id="sheetPanel">
       <section class="hero panel">
         <div class="hero-copy">
           <p class="stamp">No class. No open spellcasting. 5 sp and one NPC favor.</p>
@@ -292,6 +301,45 @@
       <section class="panel notes">
         <h2>Session Notes</h2>
         <textarea data-save rows="7" placeholder="Rumors, debts, injuries, supplies, moral complications, and things adults refuse to explain."></textarea>
+      </section>
+      </section>
+
+      <section class="tab-panel" id="mapPanel" hidden>
+        <section class="panel map-panel">
+          <div class="section-head">
+            <div>
+              <h2>Ashwick Map Tracker</h2>
+              <p>Drop in a character portrait, click the map to place them, then drag tokens as the party moves.</p>
+            </div>
+            <div class="stat-tools">
+              <button id="clearPortrait" type="button" class="ghost">Clear Thumbnail</button>
+              <button id="clearTokens" type="button">Clear Tokens</button>
+            </div>
+          </div>
+
+          <div class="map-tools">
+            <label class="drop-zone" id="portraitDrop">
+              <input id="portraitInput" type="file" accept="image/*">
+              <span>Drag/drop or choose a character thumbnail</span>
+            </label>
+            <label>
+              <span>Token label</span>
+              <input id="mapTokenName" type="text" placeholder="Character or party name">
+            </label>
+            <div class="portrait-preview" id="portraitPreview" aria-live="polite">
+              <span>No thumbnail selected</span>
+            </div>
+          </div>
+
+          <div class="map-stage" id="mapStage">
+            <div class="map-canvas" id="mapCanvas">
+              <img id="ashwickMap" src="assets/ashwick-map.png" alt="Map of Ashwick and the nearby lands">
+              <div class="token-layer" id="tokenLayer" aria-label="Placed character tokens"></div>
+            </div>
+          </div>
+
+          <div class="token-list" id="tokenList" aria-live="polite"></div>
+        </section>
       </section>
     </main>
 

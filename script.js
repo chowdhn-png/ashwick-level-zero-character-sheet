@@ -247,6 +247,7 @@ const pointBuyCosts = {
 };
 
 const storageKey = "ashwick-level-zero-sheet";
+const mapStorageKey = "ashwick-map-state";
 const statGrid = document.querySelector("#statGrid");
 const skillList = document.querySelector("#skillList");
 const checklistProgress = document.querySelector("#checklistProgress");
@@ -255,6 +256,24 @@ const sourceBookSelect = document.querySelector("#sourceBook");
 const occupationSelect = document.querySelector("#occupation");
 const speciesDetails = document.querySelector("#speciesDetails");
 const occupationDetails = document.querySelector("#occupationDetails");
+const tabButtons = Array.from(document.querySelectorAll(".tab-button"));
+const tabPanels = Array.from(document.querySelectorAll(".tab-panel"));
+const portraitInput = document.querySelector("#portraitInput");
+const portraitDrop = document.querySelector("#portraitDrop");
+const portraitPreview = document.querySelector("#portraitPreview");
+const mapTokenName = document.querySelector("#mapTokenName");
+const mapStage = document.querySelector("#mapStage");
+const mapCanvas = document.querySelector("#mapCanvas");
+const tokenLayer = document.querySelector("#tokenLayer");
+const tokenList = document.querySelector("#tokenList");
+const clearPortraitButton = document.querySelector("#clearPortrait");
+const clearTokensButton = document.querySelector("#clearTokens");
+
+let mapState = {
+  portrait: "",
+  tokens: []
+};
+let draggedToken = null;
 
 function modifier(score) {
   return Math.floor((score - 10) / 2);
@@ -336,6 +355,16 @@ function detailRow(label, value) {
   return `<div><b>${label}</b><span>${value}</span></div>`;
 }
 
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
 function updateSpeciesDetails() {
   const selected = speciesOptions.find((species) => species.name === speciesSelect.value);
   if (!selected) {
@@ -373,6 +402,16 @@ function updateOccupationDetails() {
       ${detailRow("Future paths", selected.paths)}
     </div>
   `;
+}
+
+function switchTab(targetId) {
+  tabButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tabTarget === targetId);
+  });
+  tabPanels.forEach((panel) => {
+    panel.hidden = panel.id !== targetId;
+    panel.classList.toggle("active", panel.id === targetId);
+  });
 }
 
 function getScores() {
@@ -463,6 +502,10 @@ function saveSheet() {
   updateChecklistProgress();
 }
 
+function saveMapState() {
+  localStorage.setItem(mapStorageKey, JSON.stringify(mapState));
+}
+
 function loadSheet() {
   const raw = localStorage.getItem(storageKey);
   if (!raw) {
@@ -521,6 +564,175 @@ function clearSheet() {
   updateChecklistProgress();
 }
 
+function loadMapState() {
+  const raw = localStorage.getItem(mapStorageKey);
+  if (!raw) {
+    renderMapState();
+    return;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    mapState = {
+      portrait: parsed.portrait || "",
+      tokens: Array.isArray(parsed.tokens) ? parsed.tokens : []
+    };
+  } catch {
+    localStorage.removeItem(mapStorageKey);
+  }
+
+  renderMapState();
+}
+
+function renderMapState() {
+  renderPortraitPreview();
+  renderTokens();
+  renderTokenList();
+}
+
+function renderPortraitPreview() {
+  if (mapState.portrait) {
+    portraitPreview.innerHTML = `<img src="${mapState.portrait}" alt="Selected character thumbnail">`;
+    return;
+  }
+  portraitPreview.innerHTML = "<span>No thumbnail selected</span>";
+}
+
+function tokenInitials(name) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return "PC";
+  return parts.slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
+function tokenName() {
+  return mapTokenName.value.trim() || document.querySelector("#characterName").value.trim() || "Ashwick Youth";
+}
+
+function renderTokens() {
+  tokenLayer.innerHTML = "";
+  mapState.tokens.forEach((token) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `map-token${token.image ? " has-image" : ""}`;
+    button.dataset.tokenId = token.id;
+    button.style.left = `${token.x}%`;
+    button.style.top = `${token.y}%`;
+    if (token.image) {
+      button.style.backgroundImage = `url("${token.image}")`;
+    }
+    button.innerHTML = `<span>${escapeHtml(tokenInitials(token.name))}</span>`;
+    button.title = `${token.name} - drag to move`;
+    button.addEventListener("pointerdown", startTokenDrag);
+    tokenLayer.append(button);
+  });
+}
+
+function renderTokenList() {
+  if (!mapState.tokens.length) {
+    tokenList.innerHTML = '<div class="info-card"><strong>No one is on the map yet.</strong><p>Choose a thumbnail if you want, then click the map to place a character token.</p></div>';
+    return;
+  }
+
+  tokenList.innerHTML = "";
+  mapState.tokens.forEach((token) => {
+    const row = document.createElement("div");
+    row.className = "token-row";
+    row.innerHTML = `<strong>${escapeHtml(token.name)}</strong><button type="button" data-remove-token="${token.id}">Remove</button>`;
+    tokenList.append(row);
+  });
+}
+
+function mapPointFromEvent(event) {
+  const rect = mapCanvas.getBoundingClientRect();
+  const x = ((event.clientX - rect.left) / rect.width) * 100;
+  const y = ((event.clientY - rect.top) / rect.height) * 100;
+  return {
+    x: Math.max(0, Math.min(100, x)),
+    y: Math.max(0, Math.min(100, y))
+  };
+}
+
+function addToken(event) {
+  if (event.target.closest(".map-token")) return;
+  const point = mapPointFromEvent(event);
+  const name = tokenName();
+  mapState.tokens.push({
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    name,
+    x: point.x,
+    y: point.y,
+    image: mapState.portrait
+  });
+  saveMapState();
+  renderMapState();
+}
+
+function startTokenDrag(event) {
+  event.preventDefault();
+  const tokenId = event.currentTarget.dataset.tokenId;
+  draggedToken = mapState.tokens.find((token) => token.id === tokenId);
+  event.currentTarget.setPointerCapture(event.pointerId);
+}
+
+function moveToken(event) {
+  if (!draggedToken) return;
+  const point = mapPointFromEvent(event);
+  draggedToken.x = point.x;
+  draggedToken.y = point.y;
+  const tokenEl = tokenLayer.querySelector(`[data-token-id="${draggedToken.id}"]`);
+  if (tokenEl) {
+    tokenEl.style.left = `${draggedToken.x}%`;
+    tokenEl.style.top = `${draggedToken.y}%`;
+  }
+  saveMapState();
+}
+
+function stopTokenDrag() {
+  if (!draggedToken) return;
+  draggedToken = null;
+  saveMapState();
+}
+
+function removeToken(tokenId) {
+  mapState.tokens = mapState.tokens.filter((token) => token.id !== tokenId);
+  saveMapState();
+  renderMapState();
+}
+
+function resizeImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = reject;
+      image.onload = () => {
+        const size = 180;
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = size;
+        canvas.height = size;
+        const scale = Math.max(size / image.width, size / image.height);
+        const width = image.width * scale;
+        const height = image.height * scale;
+        const x = (size - width) / 2;
+        const y = (size - height) / 2;
+        ctx.drawImage(image, x, y, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.84));
+      };
+      image.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handlePortraitFile(file) {
+  if (!file || !file.type.startsWith("image/")) return;
+  mapState.portrait = await resizeImage(file);
+  saveMapState();
+  renderPortraitPreview();
+}
+
 renderStats();
 renderSkills();
 renderSpeciesOptions();
@@ -528,6 +740,11 @@ renderOccupationOptions();
 loadSheet();
 updateSpeciesDetails();
 updateOccupationDetails();
+loadMapState();
+
+tabButtons.forEach((button) => {
+  button.addEventListener("click", () => switchTab(button.dataset.tabTarget));
+});
 
 document.querySelectorAll("[data-save]").forEach((field) => {
   field.addEventListener("input", saveSheet);
@@ -551,3 +768,37 @@ document.querySelectorAll("[data-fill]").forEach((button) => {
 document.querySelector("#printSheet").addEventListener("click", () => window.print());
 document.querySelector("#exportJson").addEventListener("click", exportJson);
 document.querySelector("#clearSheet").addEventListener("click", clearSheet);
+portraitInput.addEventListener("change", () => handlePortraitFile(portraitInput.files[0]));
+portraitDrop.addEventListener("dragover", (event) => {
+  event.preventDefault();
+  portraitDrop.classList.add("is-dragging");
+});
+portraitDrop.addEventListener("dragleave", () => portraitDrop.classList.remove("is-dragging"));
+portraitDrop.addEventListener("drop", (event) => {
+  event.preventDefault();
+  portraitDrop.classList.remove("is-dragging");
+  handlePortraitFile(event.dataTransfer.files[0]);
+});
+clearPortraitButton.addEventListener("click", () => {
+  mapState.portrait = "";
+  portraitInput.value = "";
+  saveMapState();
+  renderPortraitPreview();
+});
+clearTokensButton.addEventListener("click", () => {
+  if (!confirm("Clear all map tokens?")) return;
+  mapState.tokens = [];
+  saveMapState();
+  renderMapState();
+});
+mapCanvas.addEventListener("click", addToken);
+mapStage.addEventListener("pointermove", moveToken);
+mapStage.addEventListener("pointerup", stopTokenDrag);
+mapStage.addEventListener("pointercancel", stopTokenDrag);
+window.addEventListener("pointerup", stopTokenDrag);
+window.addEventListener("pointercancel", stopTokenDrag);
+tokenList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-remove-token]");
+  if (!button) return;
+  removeToken(button.dataset.removeToken);
+});
