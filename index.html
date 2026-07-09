@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ashwick Level 0 Character Sheet</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Ashwick Village Ledger</p>
+        <h1>Level 0 Character Sheet</h1>
+        <p class="subtitle">Ordinary youths, dangerous woods, quiet secrets, and magic that has not learned your name yet.</p>
+      </div>
+      <div class="actions">
+        <button id="printSheet" type="button">Print</button>
+        <button id="exportJson" type="button">Export JSON</button>
+        <button id="clearSheet" type="button" class="ghost">Clear</button>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <p class="stamp">No class. No open spellcasting. 5 sp and one NPC favor.</p>
+          <label class="character-name">
+            <span>Character name</span>
+            <input id="characterName" data-save type="text" placeholder="Name your Ashwick youth">
+          </label>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span>Proficiency</span>
+            <strong>+2</strong>
+          </div>
+          <div>
+            <span>Hit Points</span>
+            <strong id="hpValue">8</strong>
+          </div>
+          <div>
+            <span>Starting Coin</span>
+            <strong>5 sp</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <article class="panel">
+          <h2>Village Identity</h2>
+          <div class="fields">
+            <label>
+              <span>Species / ancestry</span>
+              <input id="species" data-save type="text" placeholder="Allowed source species">
+            </label>
+            <label>
+              <span>Source book</span>
+              <select id="sourceBook" data-save>
+                <option value="">Choose source</option>
+                <option>2014 Player's Handbook</option>
+                <option>Tasha's Cauldron of Everything</option>
+                <option>Xanathar's Guide to Everything</option>
+                <option>Eberron content</option>
+                <option>DM-approved mix</option>
+              </select>
+            </label>
+            <label>
+              <span>Ashwick occupation</span>
+              <select data-save id="occupation">
+                <option value="">Choose an occupation</option>
+                <option>Apprentice carpenter</option>
+                <option>Shepherd</option>
+                <option>Mill hand</option>
+                <option>Herbalist's helper</option>
+                <option>Fisher</option>
+                <option>Stable runner</option>
+                <option>Graveyard keeper's child</option>
+                <option>Messenger</option>
+                <option>Tavern scullion</option>
+                <option>Temple candle-lighter</option>
+                <option>Other village work</option>
+              </select>
+            </label>
+            <label>
+              <span>Family, guardian, or household</span>
+              <input data-save type="text" placeholder="Who expects you home by dusk?">
+            </label>
+            <label>
+              <span>One reasonable NPC favor</span>
+              <input data-save type="text" placeholder="Who owes you, and why?">
+            </label>
+          </div>
+          <label class="wide-label">
+            <span>Species traits to confirm with DM</span>
+            <textarea data-save rows="3" placeholder="Note active magic, innate spellcasting, supernatural powers, dormant traits, or unlock conditions."></textarea>
+          </label>
+        </article>
+
+        <article class="panel rules-card">
+          <h2>Level 0 Rules</h2>
+          <ul>
+            <li>No class, class features, class equipment, class saving throw proficiencies, or active spellcasting.</li>
+            <li>Choose ability scores normally. Proficiency bonus is +2.</li>
+            <li>Hit points are 8 + Constitution modifier, minimum 5.</li>
+            <li>Magic is rare, risky, component-bound, and socially dangerous.</li>
+            <li>Arcane foci are almost unheard of and not normal adventuring gear.</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Creation Checklist</h2>
+            <p>Manual creation for Ashwick: start ordinary, build ties, and let class identity emerge through play.</p>
+          </div>
+          <strong class="completion" id="checklistProgress">0 / 8</strong>
+        </div>
+        <div class="checklist" id="creationChecklist">
+          <label><input data-save type="checkbox"> Choose a race/species from the allowed campaign sources.</label>
+          <label><input data-save type="checkbox"> Choose ability scores using standard array or point buy.</label>
+          <label><input data-save type="checkbox"> Do not choose a class yet.</label>
+          <label><input data-save type="checkbox"> Choose an Ashwick occupation/background.</label>
+          <label><input data-save type="checkbox"> Set level 0 stats: +2 proficiency, HP, no class saves, no active spellcasting.</label>
+          <label><input data-save type="checkbox"> Record 5 sp and one reasonable NPC favor.</label>
+          <label><input data-save type="checkbox"> Answer village ties before play.</label>
+          <label><input data-save type="checkbox"> Pick a future class approach.</label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <div>
+            <h2>Ability Scores</h2>
+            <p>Set scores, watch modifiers and HP update, and keep an eye on point-buy cost if your table uses it.</p>
+          </div>
+          <div class="stat-tools">
+            <button type="button" data-fill="standard">Standard Array</button>
+            <button type="button" data-fill="commoner">Village Average</button>
+            <button type="button" data-fill="reset" class="ghost">Reset Stats</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" id="statGrid" aria-live="polite"></div>
+
+        <div class="score-summary">
+          <div>
+            <span>Point-buy estimate</span>
+            <strong id="pointBuyTotal">0 / 27</strong>
+          </div>
+          <div>
+            <span>Carrying temperament</span>
+            <strong id="temperament">Untested</strong>
+          </div>
+          <div>
+            <span>Constitution modifier</span>
+            <strong id="conMod">+0</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <article class="panel">
+          <h2>Proficiencies and Knacks</h2>
+          <p class="microcopy">Your Ashwick occupation gives 1 skill proficiency, 1 tool proficiency, starting gear, 1 practical perk, and 1 village or NPC connection.</p>
+          <div class="checkbox-grid" id="skillList"></div>
+          <label class="wide-label">
+            <span>Tools, languages, or practical knacks</span>
+            <textarea data-save rows="4" placeholder="Woodcarver's tools, cook's utensils, old road songs, goat handling..."></textarea>
+          </label>
+          <label class="wide-label">
+            <span>Small practical perk</span>
+            <input data-save type="text" placeholder="A modest advantage from your ordinary work">
+          </label>
+        </article>
+
+        <article class="panel">
+          <h2>Village Ties</h2>
+          <div class="fields">
+            <label>
+              <span>Village reputation</span>
+              <select data-save>
+                <option>Unremarkable</option>
+                <option>Reliable</option>
+                <option>Troublemaker</option>
+                <option>Kind-hearted</option>
+                <option>Odd but useful</option>
+                <option>Watched closely</option>
+              </select>
+            </label>
+            <label>
+              <span>Adult you trust most</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Adult who worries or distrusts you</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>PC known for years</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Younger child, peer, or family member</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Chore or responsibility you hate</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Place that feels like home</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Secret want beyond village life</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>What would make you break village rules?</span>
+              <input data-save type="text">
+            </label>
+            <label>
+              <span>Person you hope to become</span>
+              <input data-save type="text">
+            </label>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid two">
+        <article class="panel">
+          <h2>Gear and Preparation</h2>
+          <div class="kit">
+            <label><input data-save type="checkbox"> Bedroll or blanket</label>
+            <label><input data-save type="checkbox"> Knife or handaxe</label>
+            <label><input data-save type="checkbox"> Flint and tinder</label>
+            <label><input data-save type="checkbox"> Waterskin</label>
+            <label><input data-save type="checkbox"> 2 days of food</label>
+            <label><input data-save type="checkbox"> Rope, twine, or fishing line</label>
+          </div>
+          <label class="wide-label">
+            <span>Other reasonable belongings</span>
+            <textarea data-save rows="4" placeholder="A patched cloak, a lucky nail, mother's letter, sheep bell..."></textarea>
+          </label>
+        </article>
+
+        <article class="panel magic-panel">
+          <h2>Strange Signs</h2>
+          <p class="microcopy">For a possible magical path: not reliable combat power, not public, not safe.</p>
+          <div class="fields">
+            <label>
+              <span>Dream, instinct, or omen</span>
+              <input data-save type="text" placeholder="Strange dream, unexplained illness, memory gap...">
+            </label>
+            <label>
+              <span>Small non-combat effect</span>
+              <input data-save type="text" placeholder="Milk curdles nearby, lost things tug at your thoughts...">
+            </label>
+            <label>
+              <span>Component, taboo, or risk</span>
+              <input data-save type="text" placeholder="Iron nails sting, rowan ash calms it, adults would panic...">
+            </label>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Future Class Path</h2>
+        <div class="path-grid">
+          <label class="path-card">
+            <input data-save name="future-path" type="radio" value="Known Path">
+            <strong>Known Path</strong>
+            <span>I know what class I want to become.</span>
+          </label>
+          <label class="path-card">
+            <input data-save name="future-path" type="radio" value="Flexible Path">
+            <strong>Flexible Path</strong>
+            <span>I have a few possible classes in mind.</span>
+          </label>
+          <label class="path-card">
+            <input data-save name="future-path" type="radio" value="Discovery Path">
+            <strong>Discovery Path</strong>
+            <span>I want the story to reveal what I become.</span>
+          </label>
+        </div>
+        <label class="wide-label">
+          <span>Possible class notes</span>
+          <textarea data-save rows="4" placeholder="Known class, short list, mentors, signs, fears, or what your character admires."></textarea>
+        </label>
+      </section>
+
+      <section class="panel notes">
+        <h2>Session Notes</h2>
+        <textarea data-save rows="7" placeholder="Rumors, debts, injuries, supplies, moral complications, and things adults refuse to explain."></textarea>
+      </section>
+    </main>
+
+    <template id="statTemplate">
+      <article class="stat-card">
+        <div class="stat-top">
+          <h3></h3>
+          <span class="modifier">+0</span>
+        </div>
+        <div class="score-control">
+          <button type="button" class="decrement" aria-label="Decrease score">-</button>
+          <input type="number" min="3" max="20" value="10">
+          <button type="button" class="increment" aria-label="Increase score">+</button>
+        </div>
+        <p class="stat-note"></p>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
