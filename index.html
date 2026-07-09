@@ -51,7 +51,9 @@
           <div class="fields">
             <label>
               <span>Species / ancestry</span>
-              <input id="species" data-save type="text" placeholder="Allowed source species">
+              <select id="species" data-save>
+                <option value="">Choose species</option>
+              </select>
             </label>
             <label>
               <span>Source book</span>
@@ -68,17 +70,6 @@
               <span>Ashwick occupation</span>
               <select data-save id="occupation">
                 <option value="">Choose an occupation</option>
-                <option>Apprentice carpenter</option>
-                <option>Shepherd</option>
-                <option>Mill hand</option>
-                <option>Herbalist's helper</option>
-                <option>Fisher</option>
-                <option>Stable runner</option>
-                <option>Graveyard keeper's child</option>
-                <option>Messenger</option>
-                <option>Tavern scullion</option>
-                <option>Temple candle-lighter</option>
-                <option>Other village work</option>
               </select>
             </label>
             <label>
@@ -94,6 +85,14 @@
             <span>Species traits to confirm with DM</span>
             <textarea data-save rows="3" placeholder="Note active magic, innate spellcasting, supernatural powers, dormant traits, or unlock conditions."></textarea>
           </label>
+          <div class="info-card" id="speciesDetails">
+            <strong>Choose a species to see source notes.</strong>
+            <p>Use traits normally unless the DM says active magic or supernatural powers begin dormant.</p>
+          </div>
+          <div class="info-card occupation-card" id="occupationDetails">
+            <strong>Choose an occupation to see what it grants.</strong>
+            <p>Each Ashwick background gives 1 skill proficiency, 1 tool proficiency, starting gear, 1 practical perk, an NPC connection, and possible future class directions.</p>
+          </div>
         </article>
 
         <article class="panel rules-card">

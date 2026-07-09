@@ -13,6 +13,228 @@ const skills = [
   "Performance", "Persuasion", "Religion", "Sleight of Hand", "Stealth", "Survival"
 ];
 
+const speciesOptions = [
+  { name: "Dragonborn", source: "2014 Player's Handbook", note: "Core 2014 species. Breath weapon is an obvious supernatural trait, so confirm whether Ashwick treats it as active or dormant." },
+  { name: "Dwarf", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic; note subrace and tool/language choices from your source." },
+  { name: "Elf", source: "2014 Player's Handbook", note: "Core 2014 species. Confirm any overtly magical ancestry traits or cantrip access with the DM." },
+  { name: "Gnome", source: "2014 Player's Handbook", note: "Core 2014 species. Confirm any supernatural or innate magical traits before play." },
+  { name: "Half-Elf", source: "2014 Player's Handbook", note: "Core 2014 species. Good fit for relationship/reputation play; confirm any variant traits with the DM." },
+  { name: "Half-Orc", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic." },
+  { name: "Halfling", source: "2014 Player's Handbook", note: "Core 2014 species. Usually straightforward for low magic; note subrace from your source." },
+  { name: "Human", source: "2014 Player's Handbook", note: "Core 2014 species. Standard or variant human should be confirmed with the DM." },
+  { name: "Tiefling", source: "2014 Player's Handbook", note: "Core 2014 species. Innate spellcasting and infernal traits are socially dangerous in Ashwick; confirm what begins dormant." },
+  { name: "Custom Lineage", source: "Tasha's Cauldron of Everything", note: "Tasha option. Use only with DM approval, and define how the lineage fits Ashwick's refugee village tone." },
+  { name: "No added species options", source: "Xanathar's Guide to Everything", note: "Xanathar's is allowed for other character material, but it does not add a major player species list." },
+  { name: "Changeling", source: "Eberron content", note: "Eberron species. Shapeshifting is overtly supernatural and socially risky; confirm whether it begins active, limited, or dormant." },
+  { name: "Kalashtar", source: "Eberron content", note: "Eberron species. Psychic/spiritual traits may be subtle but supernatural; confirm how they appear in Ashwick." },
+  { name: "Shifter", source: "Eberron content", note: "Eberron species. Shifting is an obvious transformation; confirm how visible, reliable, and feared it is." },
+  { name: "Warforged", source: "Eberron content", note: "Eberron species. Needs strong DM/world fit in a village-centered low-magic campaign." },
+  { name: "Dragonmarked ancestry or variant", source: "Eberron content", note: "Eberron option. Dragonmarks are magical and should almost certainly begin dormant or story-locked unless the DM says otherwise." }
+];
+
+const occupations = [
+  {
+    name: "Blacksmith's Apprentice",
+    summary: "You work at the village forge, helping repair tools, shoe animals, sharpen blades, and maintain basic militia gear.",
+    skill: "Athletics or Investigation",
+    tool: "Smith's Tools",
+    gear: "Smith's hammer, leather apron, work gloves, whetstone, tongs, 3 iron spikes",
+    perk: "When you have access to a forge, you can repair one damaged mundane item during downtime.",
+    npc: "Brenna Hollis, the village blacksmith",
+    paths: "Fighter, Barbarian, Paladin, Artificer-style crafter, Forge-themed Cleric if magic awakens"
+  },
+  {
+    name: "Herbalist's Apprentice",
+    summary: "You assist the village healer with herbs, bandages, fevers, poultices, childbirth, wound care, and ordinary medicine.",
+    skill: "Medicine or Nature",
+    tool: "Herbalism Kit",
+    gear: "Herb knife, mortar and pestle, bandage roll, drying pouch, 2 soothing salves",
+    perk: "During a short rest, you can treat one creature's wounds. If they spend a Hit Die, they regain +1 additional HP.",
+    npc: "Mira Anlow, the village herbalist",
+    paths: "Ranger, Rogue, Druid, Cleric, Monk"
+  },
+  {
+    name: "Hunter's Apprentice",
+    summary: "You help track game, set snares, maintain trails, and keep watch for predators near Ashwick.",
+    skill: "Survival or Perception",
+    tool: "Leatherworker's Tools or Woodcarver's Tools",
+    gear: "Hunting knife, snare wire, 50 feet of cord, animal call, small hatchet",
+    perk: "You can identify common local tracks and signs without a roll unless conditions are poor.",
+    npc: "A village hunter, trapper, or retired scout",
+    paths: "Ranger, Rogue, Fighter, Barbarian, Druid"
+  },
+  {
+    name: "Miller's Assistant",
+    summary: "You work at Riverwatch Mill, moving grain, loading carts, repairing machinery, and hearing more gossip than most adults realize.",
+    skill: "Athletics or Insight",
+    tool: "Carpenter's Tools or Vehicles, land",
+    gear: "Grain sack, access to a handcart, measuring scoop, work gloves, lantern",
+    perk: "Once per session in Ashwick, you may ask: Who has been buying, hoarding, or moving unusual goods lately?",
+    npc: "The miller or one of the village's farming families",
+    paths: "Fighter, Rogue, Bard, Cleric, Paladin"
+  },
+  {
+    name: "Carpenter's Apprentice",
+    summary: "You help build homes, repair fences, fix carts, make doors, and eventually help with village fortifications.",
+    skill: "Investigation or Athletics",
+    tool: "Carpenter's Tools",
+    gear: "Hammer, saw, chisel, nails, measuring cord, wood glue",
+    perk: "Given time and materials, you can build or repair simple wooden structures such as barricades, ladders, doors, crates, or fences.",
+    npc: "The village carpenter or builder",
+    paths: "Fighter, Rogue, Ranger, Monk, Artificer-style crafter"
+  },
+  {
+    name: "Fisher / Riverhand",
+    summary: "You work the river, fishing, ferrying, checking nets, reading currents, and repairing boats.",
+    skill: "Athletics or Perception",
+    tool: "Vehicles, water or Navigator's Tools",
+    gear: "Fishing net, fish knife, hook line, cork floats, waterproof pouch",
+    perk: "You know the local river crossings, hidden shallows, and dangerous currents.",
+    npc: "A fisher family, ferryman, or river trader",
+    paths: "Rogue, Ranger, Fighter, Druid, Barbarian"
+  },
+  {
+    name: "Shrine Attendant",
+    summary: "You help at the village shrine, cleaning, lighting candles, assisting with funerals, copying names into ledgers, and comforting grieving families. This does not mean you can cast divine magic.",
+    skill: "Religion or Insight",
+    tool: "Calligrapher's Supplies or Herbalism Kit",
+    gear: "Prayer cord, candle box, ink and quill, funeral cloth, small holy symbol",
+    perk: "Villagers are more likely to confide fears, omens, guilt, or family troubles to you.",
+    npc: "Sister Cael, the shrine keeper",
+    paths: "Cleric, Paladin, Bard, Monk, Rogue"
+  },
+  {
+    name: "Shepherd / Goatherd",
+    summary: "You spend long days outside the village watching animals, learning weather, terrain, patience, and danger signs.",
+    skill: "Animal Handling or Survival",
+    tool: "Weaver's Tools or Woodcarver's Tools",
+    gear: "Shepherd's crook, sling, pouch of stones, wool cloak, animal bell",
+    perk: "You can calm ordinary livestock and can usually tell when animals are frightened by something unusual or unnatural.",
+    npc: "A farming family or elderly shepherd",
+    paths: "Ranger, Druid, Barbarian, Fighter, Cleric"
+  },
+  {
+    name: "Quarry Hand",
+    summary: "You work with stonecutters, miners, haulers, and masons near the village quarry.",
+    skill: "Athletics or History",
+    tool: "Mason's Tools or Miner's Tools",
+    gear: "Pick, chalk line, work gloves, stone chisel, dust mask or scarf",
+    perk: "You can identify unstable stonework, hidden seams, old cuts, and unsafe tunnels.",
+    npc: "Durnik Stonebelly, quarry boss, or a quarry family elder",
+    paths: "Fighter, Barbarian, Rogue, Paladin"
+  },
+  {
+    name: "Farmhand",
+    summary: "You help with planting, harvesting, animal care, fence repair, irrigation, and hard seasonal labor.",
+    skill: "Animal Handling or Athletics",
+    tool: "Cook's Utensils or Vehicles, land",
+    gear: "Sickle, pitchfork or hoe, seed pouch, work gloves, lunch tin",
+    perk: "You know the farmsteads, field paths, barns, ditches, and back trails around Ashwick.",
+    npc: "A farming family, landholder, or field boss",
+    paths: "Fighter, Ranger, Barbarian, Cleric, Monk"
+  },
+  {
+    name: "Stablehand / Messenger",
+    summary: "You care for horses, run messages, guide travelers, and know who enters or leaves Ashwick.",
+    skill: "Animal Handling or Acrobatics",
+    tool: "Vehicles, land",
+    gear: "Riding gloves, feed pouch, brush, message tube, small knife",
+    perk: "You usually know about travelers, caravans, and strangers before most villagers do.",
+    npc: "The stable owner, innkeeper, or local courier",
+    paths: "Rogue, Ranger, Fighter, Bard, Paladin"
+  },
+  {
+    name: "Inn Worker",
+    summary: "You work at the Broken Tankard serving food, cleaning rooms, carrying barrels, and overhearing travelers.",
+    skill: "Persuasion or Insight",
+    tool: "Brewer's Supplies or Cook's Utensils",
+    gear: "Apron, serving knife, bottle opener, rag, small ledger, mug token",
+    perk: "Once per session in Ashwick, you may ask what rumor is currently spreading through the village.",
+    npc: "The innkeeper or a frequent traveler",
+    paths: "Bard, Rogue, Fighter, Cleric, Warlock if later exposed to forbidden bargains"
+  },
+  {
+    name: "Tanner / Leatherworker's Apprentice",
+    summary: "You work with hides, furs, straps, boots, harnesses, armor padding, and water-resistant gear.",
+    skill: "Nature or Sleight of Hand",
+    tool: "Leatherworker's Tools",
+    gear: "Awl, hide scraper, waxed thread, leather scraps, thick gloves",
+    perk: "You can maintain leather gear and repair straps, pouches, slings, sheaths, and harnesses.",
+    npc: "The village tanner or leatherworker",
+    paths: "Rogue, Ranger, Fighter, Barbarian"
+  },
+  {
+    name: "Weaver / Seamstress Apprentice",
+    summary: "You make clothes, tents, blankets, rope, bandages, and padded armor components.",
+    skill: "Sleight of Hand or Insight",
+    tool: "Weaver's Tools",
+    gear: "Sewing kit, measuring cord, cloth scraps, needles, heavy cloak",
+    perk: "Given time and cloth, you can repair clothing, tents, packs, and padded gear.",
+    npc: "A tailor, weaver, or family elder who knows everyone's business",
+    paths: "Rogue, Bard, Monk, Cleric"
+  },
+  {
+    name: "Scribe's Assistant",
+    summary: "You help the village elder, shrine, merchant, or reeve with records, letters, contracts, maps, and ledgers.",
+    skill: "History or Investigation",
+    tool: "Calligrapher's Supplies or Cartographer's Tools",
+    gear: "Ink, quill, parchment, sealing wax, small ledger, charcoal pencil",
+    perk: "You can access village records and notice when names, debts, maps, dates, or stories do not line up.",
+    npc: "The village elder, shrine keeper, reeve, or merchant",
+    paths: "Wizard, Bard, Rogue, Cleric, Warlock"
+  },
+  {
+    name: "Charcoal Burner / Woodcutter",
+    summary: "You work in the woods cutting timber, making charcoal, stacking fuel, and maintaining forest paths.",
+    skill: "Survival or Athletics",
+    tool: "Woodcarver's Tools",
+    gear: "Handaxe, charcoal sack, tinderbox, saw, heavy gloves",
+    perk: "You know the safest woodcutting paths and can identify useful woods for fuel, construction, arrows, or crafting.",
+    npc: "A woodcutter family or charcoal camp supervisor",
+    paths: "Ranger, Barbarian, Fighter, Druid"
+  },
+  {
+    name: "Beekeeper / Orchard Hand",
+    summary: "You tend bees, fruit trees, wax, honey, cider, and seasonal harvests.",
+    skill: "Nature or Animal Handling",
+    tool: "Cook's Utensils or Brewer's Supplies",
+    gear: "Smoker, veil, pruning knife, wax block, honey jar",
+    perk: "When in Ashwick, you can produce small useful goods such as wax, honey, or soothing balm when time and supplies allow.",
+    npc: "Orchard keeper, brewer, or elderly farmer",
+    paths: "Druid, Ranger, Bard, Cleric, Rogue"
+  },
+  {
+    name: "Ratcatcher / Cellar Runner",
+    summary: "You handle pests, cellars, drains, crawlspaces, storehouses, and unpleasant jobs most villagers avoid.",
+    skill: "Stealth or Perception",
+    tool: "Thieves' Tools or Poisoner's Kit, if allowed by the DM as mundane pest-control tools",
+    gear: "Short club, cage trap, gloves, sack, hooded lantern, chalk",
+    perk: "You know hidden ways through barns, cellars, storehouses, drainage ditches, and crawlspaces.",
+    npc: "The innkeeper, miller, warehouse keeper, or unpopular village official",
+    paths: "Rogue, Ranger, Fighter, Warlock"
+  },
+  {
+    name: "Militia Runner",
+    summary: "You are too young to be a full guard, but you help clean weapons, carry messages, maintain alarms, and train with spears.",
+    skill: "Athletics or Perception",
+    tool: "Vehicles, land or Smith's Tools",
+    gear: "Training spear, wooden shield, signal whistle, oil rag, simple helmet if allowed",
+    perk: "You know village alarm procedures and can quickly rally local youths or militia members in an emergency.",
+    npc: "Captain Rusk Vale or a retired soldier",
+    paths: "Fighter, Paladin, Ranger, Barbarian"
+  },
+  {
+    name: "Gravekeeper's Helper",
+    summary: "You tend the cemetery, dig graves, maintain markers, and assist with funerals. In a world afraid of magic, the dead matter.",
+    skill: "Religion or Medicine",
+    tool: "Mason's Tools or Carpenter's Tools",
+    gear: "Shovel, grave lantern, chalk, prayer cord, worn cloak",
+    perk: "You know burial customs, old family plots, forgotten names, and which graves are older than the village claims.",
+    npc: "Sister Cael, an undertaker, or an elderly record keeper",
+    paths: "Cleric, Paladin, Rogue, Fighter, Warlock"
+  }
+];
+
 const pointBuyCosts = {
   8: 0,
   9: 1,
@@ -28,6 +250,11 @@ const storageKey = "ashwick-level-zero-sheet";
 const statGrid = document.querySelector("#statGrid");
 const skillList = document.querySelector("#skillList");
 const checklistProgress = document.querySelector("#checklistProgress");
+const speciesSelect = document.querySelector("#species");
+const sourceBookSelect = document.querySelector("#sourceBook");
+const occupationSelect = document.querySelector("#occupation");
+const speciesDetails = document.querySelector("#speciesDetails");
+const occupationDetails = document.querySelector("#occupationDetails");
 
 function modifier(score) {
   return Math.floor((score - 10) / 2);
@@ -85,6 +312,67 @@ function renderSkills() {
     label.innerHTML = `<input data-save id="${id}" type="checkbox"> ${skill}`;
     skillList.append(label);
   });
+}
+
+function renderSpeciesOptions() {
+  speciesOptions.forEach((species) => {
+    const option = document.createElement("option");
+    option.value = species.name;
+    option.textContent = `${species.name} - ${species.source}`;
+    speciesSelect.append(option);
+  });
+}
+
+function renderOccupationOptions() {
+  occupations.forEach((occupation) => {
+    const option = document.createElement("option");
+    option.value = occupation.name;
+    option.textContent = occupation.name;
+    occupationSelect.append(option);
+  });
+}
+
+function detailRow(label, value) {
+  return `<div><b>${label}</b><span>${value}</span></div>`;
+}
+
+function updateSpeciesDetails() {
+  const selected = speciesOptions.find((species) => species.name === speciesSelect.value);
+  if (!selected) {
+    speciesDetails.innerHTML = "<strong>Choose a species to see source notes.</strong><p>Use traits normally unless the DM says active magic or supernatural powers begin dormant.</p>";
+    return;
+  }
+
+  sourceBookSelect.value = selected.source;
+  speciesDetails.innerHTML = `
+    <strong>${selected.name}</strong>
+    <p>${selected.note}</p>
+    <div class="detail-list">
+      ${detailRow("Source", selected.source)}
+      ${detailRow("Ashwick note", "Check with the DM if this choice gives active magic, innate spellcasting, shapeshifting, or other obvious supernatural power.")}
+    </div>
+  `;
+}
+
+function updateOccupationDetails() {
+  const selected = occupations.find((occupation) => occupation.name === occupationSelect.value);
+  if (!selected) {
+    occupationDetails.innerHTML = "<strong>Choose an occupation to see what it grants.</strong><p>Each Ashwick background gives 1 skill proficiency, 1 tool proficiency, starting gear, 1 practical perk, an NPC connection, and possible future class directions.</p>";
+    return;
+  }
+
+  occupationDetails.innerHTML = `
+    <strong>${selected.name}</strong>
+    <p>${selected.summary}</p>
+    <div class="detail-list">
+      ${detailRow("Skill", selected.skill)}
+      ${detailRow("Tool", selected.tool)}
+      ${detailRow("Gear", selected.gear)}
+      ${detailRow("Perk", selected.perk)}
+      ${detailRow("NPC", selected.npc)}
+      ${detailRow("Future paths", selected.paths)}
+    </div>
+  `;
 }
 
 function getScores() {
@@ -235,11 +523,25 @@ function clearSheet() {
 
 renderStats();
 renderSkills();
+renderSpeciesOptions();
+renderOccupationOptions();
 loadSheet();
+updateSpeciesDetails();
+updateOccupationDetails();
 
 document.querySelectorAll("[data-save]").forEach((field) => {
   field.addEventListener("input", saveSheet);
   field.addEventListener("change", saveSheet);
+});
+
+speciesSelect.addEventListener("change", () => {
+  updateSpeciesDetails();
+  saveSheet();
+});
+
+occupationSelect.addEventListener("change", () => {
+  updateOccupationDetails();
+  saveSheet();
 });
 
 document.querySelectorAll("[data-fill]").forEach((button) => {

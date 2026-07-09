@@ -252,6 +252,48 @@ textarea {
   margin-top: 1rem;
 }
 
+.info-card {
+  margin-top: 1rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(213, 185, 135, 0.85);
+  border-radius: 8px;
+  background: rgba(245, 231, 203, 0.62);
+}
+
+.info-card strong {
+  display: block;
+  color: var(--moss-dark);
+  font-size: 1.05rem;
+}
+
+.info-card p {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.detail-list {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.detail-list div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(213, 185, 135, 0.75);
+}
+
+.detail-list b {
+  color: var(--moss-dark);
+  font-family: Arial, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .rules-card ul {
   margin: 0;
   padding-left: 1.2rem;
@@ -478,6 +520,10 @@ input[type="checkbox"] {
 
   .shell {
     width: min(100% - 0.75rem, 1180px);
+  }
+
+  .detail-list div {
+    grid-template-columns: 1fr;
   }
 }
 
